@@ -1,5 +1,6 @@
 const fs = require('fs');
 const readline = require('readline');
+const decodeLine = require('./005_decode');
 
 const readInterface = readline.createInterface({
     input: fs.createReadStream('./005.txt'),
@@ -12,16 +13,12 @@ let found = 0;
 
 readInterface.on('line', function (line) {
     if (line) {
-        const parts = line.trim().split(' ');
-        for (let i = 0; i < parts.length; i++) {
-            const part = parts[i];
-            passFields.push(part.split(':')[0]);
+        const { row, column} = decodeLine(line);
+        console.log({ row, column});
+        const id = row * 8 + column;
+        if (id > found) {
+            found = id;
         }
-    } else {
-        if (requiredFields.every(field => passFields.includes(field))) {
-            found++;
-        }
-        passFields = [];
     }
 
 });
